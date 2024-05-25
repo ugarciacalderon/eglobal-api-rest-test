@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: "gatewayserver"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 2s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+      lowerCaseServiceId: true
+
+info:
+  app:
+    name: "gatewayserver"
+    description: "uarciac Gateway Server"
+    version: "1.0.0"
+
+logging:
+  level:
+    com:
+      ulisesgc:
+        cards: DEBUG
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10 # numero de peticiones antes de cambiar el estado a Closed o Open
+      permittedNumberOfCallsInHalfOpenState: 2 # numero de peticiones en estado  Half_Open antes de cambiar el estado a Closed o Open
+      failureRateThreshold: 50 # 50% umbral, si al menos ese procentaje falla entonces cambia de estado a Closed
+      waitDurationInOpenState: 10000 # ms, para cambiar entre estado Half_Open a Abierto

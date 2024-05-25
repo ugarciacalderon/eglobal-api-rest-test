@@ -1,0 +1,71 @@
+services:
+  #--------------------------------------------- CONFIG CONFIG-SERVER ---------------------------------------------#
+  configserver:
+    image: "octomagiccode/configserver-eglobal:v1"
+    container_name: configserver-ms-eglobal
+    ports:
+      - "8071:8071"
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+  #--------------------------------------------- CONFIG EUREKA SERVER ---------------------------------------------#
+  eurekaserver:
+    image: "octomagiccode/eureka-server-eglobal:v1"
+    container_name: eurekaserver-ms-eglobal
+    ports:
+      - "8070:8070"
+    healthcheck:
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+    environment:
+      SPRING_APPLICATION_NAME: "eurekaserver"
+  #--------------------------------------------- CONFIG EGLOBAL MS ---------------------------------------------#
+  eglobal:
+    image: "octomagiccode/api-rest-eglobal:v1"
+    container_name: api-rest-ms-eglobal
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      SPRING_APPLICATION_NAME: "eglobal-api-rest"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+
+
+  #--------------------------------------------- CONFIG GATEWAY SERVER ---------------------------------------------#
+  gatewayserver:
+    image: "octomagiccode/gatewayserver-eglobal:v1"
+    container_name: gatewayserver-ms-eglobal
+    ports:
+      - "8072:8072"
+    depends_on:
+      eglobal:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "gatewayserver"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+
+networks:
+  ugarciac:
+    driver: "bridge"
+
