@@ -20,12 +20,12 @@ public class GatewayserverApplication {
 		String red = "ugarciac";
 		return builder.routes()
 				.route(p ->
-						p.path("/ugarciac/eglobal/**")
-								.filters(f -> f.rewritePath("/ugarciac/eglobal/(?<segment>.*)","/${segment}")
+						p.path("/ugarciac/**")
+								.filters(f -> f.rewritePath("/ugarciac/(?<segment>.*)","/${segment}")
 										.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
 										.circuitBreaker(config -> config.setName("accountsCircuitBreaker")
 												.setFallbackUri("forward:/contactSupport")))
-								.uri("lb://EGLOBAL"))
+								.uri("lb://EGLOBAL-API-REST"))
 				.build();
 	}
 

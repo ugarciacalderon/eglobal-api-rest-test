@@ -21,19 +21,12 @@ management:
   endpoint:
     gateway:
       enabled: true
-      lowerCaseServiceId: true
 
 info:
   app:
     name: "gatewayserver"
     description: "uarciac Gateway Server"
     version: "1.0.0"
-
-logging:
-  level:
-    com:
-      ulisesgc:
-        cards: DEBUG
 
 resilience4j.circuitbreaker:
   configs:
