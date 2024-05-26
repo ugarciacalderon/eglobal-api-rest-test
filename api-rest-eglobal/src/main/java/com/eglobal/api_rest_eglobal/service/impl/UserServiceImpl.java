@@ -49,8 +49,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse findByUsername(String username, String email, String mobileNumber) {
+    public UserResponse findByUsername(String username, String email, String mobileNumber) throws Exception{
         User userfound = null;
+
         if (null != username) {
             userfound = usersRepository.findByUsername(username).orElseThrow(
                     () -> new ResourceNotFoundException("User", "username", username)

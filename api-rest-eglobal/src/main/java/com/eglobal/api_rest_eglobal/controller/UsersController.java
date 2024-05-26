@@ -41,7 +41,7 @@ public class UsersController {
     }
 
     @GetMapping("/consultaUsuario")
-    public ResponseEntity consultaUsuario(@RequestParam(name = "username", required = true)
+    public ResponseEntity consultaUsuario(@RequestParam(name = "username", required = false)
                                             @Pattern(regexp=UserConstants.VALID_USERNAME_REGEX, message = MessaggesConstants.MESSAGGE_USERNAME)
                                             String username,
                                         @RequestParam(name = "email", required = false) @Pattern(regexp = UserConstants.VALID_EMAIL_REGEX, message = MessaggesConstants.MESSAGGE_EMAIL)
@@ -53,7 +53,9 @@ public class UsersController {
         UserResponse userResponse;
         UserResponse savedUser;
         try {
-
+            if (null != username || null != email || null != mobileNumber) {
+                throw new Exception("Debe de especificar al menos un parametro");
+            }
             savedUser = userService.findByUsername(username, email, mobileNumber);
             if (null != savedUser) {
                 response = ResponseEntity

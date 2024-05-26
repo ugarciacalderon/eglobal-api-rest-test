@@ -5,5 +5,5 @@ import com.eglobal.api_rest_eglobal.response.UserResponse;
 
 public interface UserService {
     Boolean save(UserDto users);
-    UserResponse findByUsername(String username, String email, String mobileNumber);
+    UserResponse findByUsername(String username, String email, String mobileNumber) throws Exception;
 }
